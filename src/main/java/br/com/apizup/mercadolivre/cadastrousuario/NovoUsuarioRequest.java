@@ -4,7 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 import br.com.apizup.mercadolivre.compartilhado.UnicoValor;
 
@@ -28,9 +28,8 @@ public class NovoUsuarioRequest {
 		return new Usuario(email, new SenhaLimpa(senha));
 	}
 
-	public @Email String getEmail() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getEmail() {
+		return email;
 	}
 
 }

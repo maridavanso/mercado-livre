@@ -15,7 +15,7 @@ public class NovaCategoriaRequest {
 	@UnicoValor(domainClass=Categoria.class,fieldName="nome")
 	private String nome;	
 	@Positive
-	/* @ExisteId(domainClass = Categoria.class,fieldName = "id") */
+	@ExisteId(domainClass = Categoria.class,fieldName = "id") 
 	private Long idCategoriaMae;
 	
 	public void setNome(String nome) {

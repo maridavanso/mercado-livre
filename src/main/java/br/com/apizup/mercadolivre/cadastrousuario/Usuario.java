@@ -13,14 +13,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 @Entity
 public class Usuario {
-
-	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,9 +36,10 @@ public class Usuario {
 		Assert.isTrue(StringUtils.hasLength(email), "email não pode ser em branco");
 		Assert.notNull(senhaLimpa, "senha não pode ser nula");
 		/* Assert.isTrue(senha.length() >= 6, "senha deve ter 6 dígitos"); */
-	
+
 		this.email = email;
 		this.senha = senhaLimpa.hash();
+		this.instanteCriacao = LocalDateTime.now();
 	}
 
 	@Override
@@ -50,21 +48,38 @@ public class Usuario {
 		return "Usuario [id =" + id + ", email=" + email + ", senha=" + senha + "]";
 	}
 
-	/* teste */
+	public String getEmail() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getSenha() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
+	public LocalDateTime getInstanteCriacao() {
+        return instanteCriacao;
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		return result;
+	}
+
 	/*
-	 * public String getEmail() { return this.email; }
-	 * 
-	 * @Override public int hashCode() { final int prime = 31; int result = 1;
-	 * result = prime * result + ((email == null) ? 0 : email.hashCode()); return
-	 * result; }
-	 * 
 	 * @Override public boolean equals(Object obj) { if (this == obj) return true;
 	 * if (obj == null) return false; if (getClass() != obj.getClass()) return
 	 * false; Usuario other = (Usuario) obj; if (email == null) { if (other.email !=
 	 * null) return false; } else if (!email.equals(other.email)) return false;
 	 * return true; }
-	 * 
-	 * public Long getId() { return this.id; }
 	 */
+
+	public Long getId() {
+		return this.id;
+	}
+
 }
