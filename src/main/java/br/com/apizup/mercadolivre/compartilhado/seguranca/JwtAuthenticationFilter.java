@@ -17,7 +17,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private TokenManager tokenManager;
 	private UsersService usersService;
-
+	
 	public JwtAuthenticationFilter(TokenManager tokenManager, UsersService usersService) {
 		this.tokenManager = tokenManager;
 		this.usersService = usersService;
@@ -28,19 +28,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		Optional<String> possibleToken = getTokenFromRequest(request);
+		
+        if (possibleToken.isPresent() && tokenManager.isValid(possibleToken.get())) {
+            
+        	String userName = tokenManager.getUserName(possibleToken.get());
+            UserDetails userDetails = usersService.loadUserByUsername(userName);
+            
+            UsernamePasswordAuthenticationToken authentication = 
+            			new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-		if (possibleToken.isPresent() && tokenManager.isValid(possibleToken.get())) {
-
-			String userName = tokenManager.getUserName(possibleToken.get());
-			UserDetails userDetails = usersService.loadUserByUsername(userName);
-
-			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-					null, userDetails.getAuthorities());
-
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-		}
-
-		chain.doFilter(request, response);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        
+        chain.doFilter(request, response);
 	}
 
 	private Optional<String> getTokenFromRequest(HttpServletRequest request) {
@@ -49,32 +49,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		return Optional.ofNullable(authToken);
 	}
 
-	/*
-	 * @Override protected void doFilterInternal(HttpServletRequest request,
-	 * HttpServletResponse response, FilterChain chain) throws ServletException,
-	 * IOException {
-	 * 
-	 * String possibleToken = getTokenFromRequest(request);
-	 * 
-	 * if (tokenManager.isValid(possibleToken)) {
-	 * 
-	 * String userName = tokenManager.getUserName(possibleToken); UserDetails
-	 * userDetails = usersService.loadUserByUsername(userName);
-	 * 
-	 * UsernamePasswordAuthenticationToken authentication = new
-	 * UsernamePasswordAuthenticationToken(userDetails, null,
-	 * userDetails.getAuthorities());
-	 * 
-	 * SecurityContextHolder.getContext().setAuthentication(authentication); }
-	 * 
-	 * chain.doFilter(request, response); }
-	 * 
-	 * private String getTokenFromRequest(HttpServletRequest request) { String token
-	 * = request.getHeader("Authorization");
-	 * 
-	 * if(token == null || token.isEmpty() || !token.startsWith("Bearer ")) { return
-	 * null; }
-	 * 
-	 * return token.substring(7, token.length()); // 7 porq "Bearer " conta }
-	 */
 }

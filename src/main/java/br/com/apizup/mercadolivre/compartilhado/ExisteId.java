@@ -16,7 +16,7 @@ import javax.validation.Payload;
 @Retention(RUNTIME)
 public @interface ExisteId {
 
-	String message() default "{com.bancozup.beanvalidation.existsid}";
+	String message() default "{com.apicozup.beanvalidation.existsid}";
 	Class<?>[] groups() default { };
 	Class<? extends Payload>[] payload() default { };
 	String fieldName();

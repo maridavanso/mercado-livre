@@ -6,7 +6,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,17 +17,17 @@ public class CadastroUsuarioController {
 	
 	@PersistenceContext
 	private EntityManager manager;
+	@Autowired
+	private ProibeEmailDuplicado proibeUsuarioComEmailDuplicado;
 	
-	/*
-	 * @Autowired private ProibeEmailDuplicado proibeEmailDuplicado;
-	 * 
-	 * @InitBinder public void init(WebDataBinder binder) {
-	 * binder.addValidators(proibeEmailDuplicado); }
-	 */
+	@InitBinder
+	public void init(WebDataBinder binder) {
+		binder.addValidators(proibeUsuarioComEmailDuplicado);
+	}
 	
 	@PostMapping(value = "/usuarios")
 	@Transactional
-	public String cria(@Valid @RequestBody NovoUsuarioRequest request) {
+	public String cria(@RequestBody @Valid NovoUsuarioRequest request) {
 		Usuario novoUsuario = request.toUsuario();
 		manager.persist(novoUsuario);
 		return novoUsuario.toString();
